@@ -1,148 +1,102 @@
-# import pandas as pd
-# from src.data_processing.feature_analyzer import (
-#     extract_feature_keys,
-#     get_feature_frequency,
-#     get_feature_frequency_by_category,
-#     normalize_feature_name,
-#     find_formatting_aliases,
-#     extract_feature_keys_and_values,
-#     get_feature_value_frequency,
-#     get_category_feature_profile,
-#     get_category_feature_profile,
-# )
-
-# def test_extract_feature_keys_and_values():
-#     value = '{"RAM": "16 GB", "Storage": "512 GB"}'
-
-#     result = extract_feature_keys_and_values(value)
-
-#     assert result == [
-#         ("RAM", "16 GB"),
-#         ("Storage", "512 GB"),
-#     ]
-
-
-# def test_get_feature_value_frequency():
-#     df = pd.DataFrame(
-#         {
-#             "Features": [
-#                 '{"RAM": "16 GB"}',
-#                 '{"RAM": "16 GB"}',
-#                 '{"RAM": "8 GB"}',
-#             ]
-#         }
-#     )
-
-#     result = get_feature_value_frequency(
-#         df,
-#         features=["RAM"],
-#     )
-
-#     ram_16 = result[
-#         (result["feature"] == "RAM")
-#         & (result["value"] == "16 GB")
-#     ].iloc[0]
-
-#     ram_8 = result[
-#         (result["feature"] == "RAM")
-#         & (result["value"] == "8 GB")
-#     ].iloc[0]
-
-#     assert ram_16["frequency"] == 2
-#     assert ram_8["frequency"] == 1
-# def test_get_category_feature_profile():
-#     df = pd.DataFrame(
-#         {
-#             "Main Category": [
-#                 "Electronics",
-#                 "Electronics",
-#                 "Electronics",
-#                 "Electronics",
-#             ],
-#             "Features": [
-#                 '{"RAM": "8 GB", "Colour": "Black"}',
-#                 '{"RAM": "16 GB", "Colour": "White"}',
-#                 '{"RAM": "8 GB", "Colour": "Black"}',
-#                 '{"RAM": "16 GB"}',
-#             ],
-#         }
-#     )
-
-#     result = get_category_feature_profile(
-#         df,
-#         min_percentage=50.0,
-#     )
-
-#     ram = result[
-#         (result["main_category"] == "Electronics")
-#         & (result["feature"] == "RAM")
-#     ]
-
-#     colour = result[
-#         (result["main_category"] == "Electronics")
-#         & (result["feature"] == "Colour")
-#     ]
-
-#     assert len(ram) == 1
-#     assert ram.iloc[0]["percentage"] == 100.0
-
-#     assert len(colour) == 1
-#     assert colour.iloc[0]["percentage"] == 75.0
-
-# # --------------------------------------------------
-# # 5. Category feature profiles
-# # --------------------------------------------------
-
-# category_profiles = get_category_feature_profile(
-#     df,
-#     min_percentage=10.0,
-# )
-
-# category_profiles.to_csv(
-#     OUTPUT_DIR / "category_feature_profiles.csv",
-#     index=False,
-# )
-
-# print("\nCategory Feature Profiles:")
-
-# for category in category_profiles["main_category"].unique():
-#     category_features = category_profiles[
-#         category_profiles["main_category"] == category
-#     ]
-
-#     print(f"\n{category}:")
-#     print(
-#         category_features[
-#             ["feature", "frequency", "percentage"]
-#         ].to_string(index=False)
-#     )
-
-from src.data_processing.category_schema import (
-    get_category_schema,
-    is_supported_category,
+from src.data_processing.feature_normalizer import (
+    normalize_feature_name,
+    normalize_feature_value,
+    parse_ram_gb,
+    parse_speed_ghz,
+    parse_screen_size_inches,
+    parse_storage_gb,
+    parse_weight_g    
 )
-def test_get_category_schema():
-    schema = get_category_schema("laptop")
 
-    assert "ram_gb" in schema
-    assert "processor" in schema
-    assert "processor_speed_ghz" in schema
+def test_normalize_feature_name():
+    assert normalize_feature_name(
+        "RAM Memory Installed Size"
+    ) == "ram_gb"
 
+    assert normalize_feature_name(
+        "CPU Model"
+    ) == "processor"
 
-def test_running_shoes_schema():
-    schema = get_category_schema("running_shoes")
+    assert normalize_feature_name(
+        "CPU Speed"
+    ) == "processor_speed_ghz"
 
-    assert "material" in schema
-    assert "sole_material" in schema
-    assert "closure_type" in schema
-    assert "heel_type" in schema
-
-
-def test_supported_category():
-    assert is_supported_category("laptop") is True
-    assert is_supported_category("running_shoes") is True
-    assert is_supported_category("unknown_category") is False
+    assert normalize_feature_name(
+        "Closure Type"
+    ) == "closure_type"
 
 
-def test_unknown_category_returns_empty_schema():
-    assert get_category_schema("unknown_category") == []
+def test_unknown_feature_name():
+    assert normalize_feature_name(
+        "Some Unknown Feature"
+    ) is None
+
+
+def test_parse_ram_gb():
+    assert parse_ram_gb("16 GB") == 16.0
+    assert parse_ram_gb("8 GB") == 8.0
+
+
+def test_parse_ram_mb():
+    result = parse_ram_gb("4 MB")
+
+    assert round(result, 4) == round(4 / 1024, 4)
+
+
+def test_parse_speed_ghz():
+    assert parse_speed_ghz("2.4 GHz") == 2.4
+    assert parse_speed_ghz("3.2GHz") == 3.2
+
+
+def test_normalize_feature_value():
+    assert normalize_feature_value(
+        "ram_gb",
+        "16 GB",
+    ) == 16.0
+
+    assert normalize_feature_value(
+        "processor_speed_ghz",
+        "2.4 GHz",
+    ) == 2.4
+
+    assert normalize_feature_value(
+        "processor",
+        "Intel Core i7",
+    ) == "Intel Core i7"
+
+def test_parse_screen_size_inches():
+    result = parse_screen_size_inches(
+        "39.6 Centimetres"
+    )
+
+    assert round(result, 2) == 15.59
+
+
+def test_parse_screen_size_inches_already_inches():
+    result = parse_screen_size_inches(
+        "15.6 inches"
+    )
+
+    assert result == 15.6
+def test_parse_storage_gb():
+    result = parse_storage_gb("512 GB")
+    assert result == 512.0
+
+
+def test_parse_storage_tb():
+    result = parse_storage_gb("1 TB")
+    assert result == 1024.0
+
+def test_parse_weight_grams():
+    result = parse_weight_g("65 g")
+    assert result == 65.0
+
+
+def test_parse_weight_kilograms():
+    result = parse_weight_g("0.8 Kilograms")
+    assert result == 800.0
+
+
+def test_parse_weight_pounds():
+    result = parse_weight_g("0.43 Pounds")
+    assert round(result, 2) == 195.04

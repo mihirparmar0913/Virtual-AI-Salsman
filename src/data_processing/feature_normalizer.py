@@ -20,7 +20,7 @@ FEATURE_NAME_MAP = {
     "CPU Speed": "processor_speed_ghz",
     "Operating System": "operating_system",
     "Screen Size": "screen_size_inches",
-    "Hard Disk Size": "storage",
+    "Hard Disk Size": "storage_gb",
     
     # Audio
     "Connectivity Technology": "connectivity",
@@ -55,6 +55,9 @@ FEATURE_NAME_MAP = {
     "Fit type": "fit",
     "Fit Type": "fit",
     "Style": "style",
+
+    "Item Weight": "weight_g",
+    "Item weight": "weight_g",
 
    
 }
@@ -179,5 +182,70 @@ def normalize_feature_value(canonical_name, value):
 
     if canonical_name == "screen_size_inches":
         return parse_screen_size_inches(value)
+    if canonical_name == "storage_gb":
+        return parse_storage_gb(value)
+
+    if canonical_name == "weight_g":
+        return parse_weight_g(value)
 
     return value
+
+
+def parse_storage_gb(value):
+    """
+    Convert storage values to gigabytes.
+    Supports GB and TB.
+    """
+    if not isinstance(value, str):
+        return None
+
+    match = re.search(
+        r"([\d.]+)\s*(GB|TB)",
+        value,
+        re.IGNORECASE,
+    )
+
+    if not match:
+        return None
+
+    number = float(match.group(1))
+    unit = match.group(2).upper()
+
+    if unit == "GB":
+        return number
+
+    if unit == "TB":
+        return number * 1024
+
+    return None
+
+def parse_weight_g(value):
+    """
+    Convert weight values to grams.
+    Supports grams, kilograms, and pounds.
+    """
+    if not isinstance(value, str):
+        return None
+
+    match = re.search(
+        r"([\d.]+)\s*(g|grams?|kg|kilograms?|lb|lbs|pounds?)",
+        value,
+        re.IGNORECASE,
+    )
+
+    if not match:
+        return None
+
+    number = float(match.group(1))
+    unit = match.group(2).lower()
+
+    if unit in {"g", "gram", "grams"}:
+        return number
+
+    if unit in {"kg", "kilogram", "kilograms"}:
+        return number * 1000
+
+    if unit in {"lb", "lbs", "pound", "pounds"}:
+        return number * 453.59237
+
+    return None
