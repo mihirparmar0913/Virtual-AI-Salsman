@@ -172,3 +172,102 @@ def find_formatting_aliases(feature_frequency):
         .sort_values("variant_count", ascending=False)
         .reset_index(drop=True)
     )
+def get_feature_value_frequency(df, features=None):
+    """
+    Count how frequently each value occurs for each feature.
+
+    Args:
+        df: Product DataFrame.
+        features: Optional list of feature names to analyze.
+                  If None, all features are analyzed.
+
+    Returns:
+        pd.DataFrame with:
+        - feature
+        - value
+        - frequency
+    """
+    counter = Counter()
+
+    for raw_features in df["Features"]:
+        feature_data = extract_feature_keys_and_values(raw_features)
+
+        for feature, value in feature_data:
+            if features is None or feature in features:
+                counter[(feature, value)] += 1
+
+    results = [
+        {
+            "feature": feature,
+            "value": value,
+            "frequency": frequency,
+        }
+        for (feature, value), frequency in counter.items()
+    ]
+
+    return (
+        pd.DataFrame(results)
+        .sort_values(
+            ["feature", "frequency"],
+            ascending=[True, False],
+        )
+        .reset_index(drop=True)
+    )
+
+
+def extract_feature_keys_and_values(value):
+    """
+    Extract feature key-value pairs from a Features JSON value.
+
+    Returns:
+        list[tuple]: List of (feature, value) pairs.
+    """
+    if value is None or pd.isna(value):
+        return []
+
+    if isinstance(value, dict):
+        parsed = value
+
+    elif isinstance(value, str):
+        try:
+            parsed = json.loads(value)
+        except (json.JSONDecodeError, TypeError):
+            return []
+
+        if not isinstance(parsed, dict):
+            return []
+
+    else:
+        return []
+
+    return [
+        (str(feature).strip(), str(feature_value).strip())
+        for feature, feature_value in parsed.items()
+    ]
+def get_category_feature_profile(df, min_percentage=10.0):
+    """
+    Identify features that appear frequently within each product category.
+
+    Args:
+        df: Product DataFrame.
+        min_percentage: Minimum percentage of products in a category
+                        that must contain the feature.
+
+    Returns:
+        pd.DataFrame containing:
+        - main_category
+        - feature
+        - frequency
+        - percentage
+    """
+    category_frequency = get_feature_frequency_by_category(df)
+
+    profile = category_frequency[
+        category_frequency["percentage"] >= min_percentage
+    ].copy()
+
+    return profile.sort_values(
+        ["main_category", "percentage"],
+        ascending=[True, False],
+    ).reset_index(drop=True)
+    

@@ -1,0 +1,219 @@
+[
+  {
+    "normalized_feature":"number of items",
+    "variants":[
+      "Number of Items",
+      "Number of items",
+      "NUMBER OF ITEMS"
+    ],
+    "variant_count":3
+  },
+  {
+    "normalized_feature":"closure type",
+    "variants":[
+      "Closure type",
+      "Closure Type"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"material type",
+    "variants":[
+      "Material type",
+      "Material Type"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"item weight",
+    "variants":[
+      "Item Weight",
+      "Item weight"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"watch movement type",
+    "variants":[
+      "Watch movement type",
+      "Watch Movement Type"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"case diameter",
+    "variants":[
+      "Case diameter",
+      "Case Diameter"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"fit type",
+    "variants":[
+      "Fit type",
+      "Fit Type"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"band material type",
+    "variants":[
+      "Band material type",
+      "Band Material Type"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"model name",
+    "variants":[
+      "Model Name",
+      "Model name"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"capacity",
+    "variants":[
+      "Capacity",
+      "CAPACITY"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"sole material",
+    "variants":[
+      "Sole material",
+      "Sole Material"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"outer material",
+    "variants":[
+      "Outer material",
+      "Outer Material"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"item shape",
+    "variants":[
+      "Item shape",
+      "Item Shape"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"price",
+    "variants":[
+      "Price",
+      "PRICE"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"display resolution",
+    "variants":[
+      "Display Resolution",
+      "Display resolution"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"case thickness",
+    "variants":[
+      "Case thickness",
+      "Case Thickness"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"clasp type",
+    "variants":[
+      "Clasp type",
+      "Clasp Type"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"surface recommendation",
+    "variants":[
+      "Surface Recommendation",
+      "SURFACE RECOMMENDATION"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"battery cell composition",
+    "variants":[
+      "Battery Cell Composition",
+      "Battery cell composition"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"frame material",
+    "variants":[
+      "Frame Material",
+      "Frame material"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"case size",
+    "variants":[
+      "Case Size",
+      "CASE SIZE"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"inner material",
+    "variants":[
+      "Inner material",
+      "Inner Material"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"processor",
+    "variants":[
+      "Processor",
+      "PROCESSOR"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"display",
+    "variants":[
+      "Display",
+      "DISPLAY"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"battery type",
+    "variants":[
+      "Battery Type",
+      "Battery type"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"band width",
+    "variants":[
+      "Band width",
+      "Band Width"
+    ],
+    "variant_count":2
+  },
+  {
+    "normalized_feature":"quantity",
+    "variants":[
+      "Quantity",
+      "QUANTITY"
+    ],
+    "variant_count":2
+  }
+]
